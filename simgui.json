@@ -1,0 +1,61 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/PathPlanner": "Alerts"
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "PathPlanner": {
+        "Pose2d##v_/PathPlanner/currentPose": {
+          "Rotation2d##v_rotation": {
+            "open": true
+          },
+          "Translation2d##v_translation": {
+            "open": true
+          },
+          "open": true
+        },
+        "Pose2d##v_/PathPlanner/targetPose": {
+          "Rotation2d##v_rotation": {
+            "open": true
+          },
+          "Translation2d##v_translation": {
+            "open": true
+          },
+          "open": true
+        },
+        "Pose2d[]##v_/PathPlanner/activePath": {
+          "Pose2d##v_[0]": {
+            "Rotation2d##v_rotation": {
+              "open": true
+            },
+            "Translation2d##v_translation": {
+              "open": true
+            },
+            "open": true
+          },
+          "Pose2d##v_[1]": {
+            "Rotation2d##v_rotation": {
+              "open": true
+            },
+            "Translation2d##v_translation": {
+              "open": true
+            },
+            "open": true
+          },
+          "open": true
+        },
+        "double[]##v_/PathPlanner/vel": {
+          "open": true
+        },
+        "open": true
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  }
+}
