@@ -17,6 +17,7 @@ import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,6 +35,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.OIConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -92,8 +94,8 @@ public class DriveSubsystem extends SubsystemBase {
                 this::getPose, // Robot pose supplier
                 this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                //this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                (speeds, feedforwards) -> driveRobotRelative(speeds),
+                this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                //(speeds, feedforwards) -> driveRobotRelative(speeds),
                 new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your
                                                  // Constants class
                         new PIDConstants(3, 0, 0), // Translation PID constants
@@ -189,7 +191,12 @@ public class DriveSubsystem extends SubsystemBase {
             : new ChassisSpeeds(forwardDelivered, strafeDelivered, rotDelivered));
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
-    
+    //System.out.println("=================In drive===================");
+    //System.out.println("forwardDelivered: " + forwardDelivered);
+    //System.out.println("speedMps: " + swerveModuleStates[0].speedMetersPerSecond);
+    //System.out.println("Forward: " + -forward);
+    //System.out.println("kMaxSpeedMps: " + DriveConstants.kMaxSpeedMetersPerSecond);
+    //System.out.println("============================================");
 
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
@@ -198,36 +205,26 @@ public class DriveSubsystem extends SubsystemBase {
 
   }
 
-  public void drive(ChassisSpeeds speeds, boolean fieldRelative) {
-    if (fieldRelative)
-      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getPose().getRotation());
-    
-    //speeds = ChassisSpeeds.discretize(speeds, 0.02);
-    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Constants.MAX_AUTO_SPEED);
-    System.out.println("In drive");
-    System.out.println("RealDesiredChassisSpeed: " + DriveConstants.kDriveKinematics.toChassisSpeeds(swerveModuleStates).vxMetersPerSecond);
-    System.out.println("State[0] Speed m/s: " + swerveModuleStates[0].speedMetersPerSecond);
-    setModuleStates(swerveModuleStates);
-}
-
   public ChassisSpeeds getRobotRelativeSpeeds() {
-    System.out.println("In getRobotRelativeSpeeds");
+    System.out.println("=======In getRobotRelativeSpeeds===========");
     System.out.println(DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates()));
+    System.out.println("===========================================");
     return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
-      //m_frontLeft.getState(),
-      //m_frontRight.getState(),
-      //m_rearLeft.getState(),
-      //m_rearRight.getState());
   }
 
   public void driveRobotRelative(ChassisSpeeds speeds) {
-    //ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
 
-    //SwerveModuleState[] targetStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(targetSpeeds);
-    //setStates(targetStates);
-    System.out.println("In driveRobotRelative");
-    drive(speeds, false);
+    SwerveModuleState[] targetStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(targetSpeeds);
+    System.out.println("============In driveRobotRelative===========");
+    System.out.println("targetSpeeds: " + targetSpeeds);
+    System.out.println("speeds: " + speeds);
+    System.out.println("Desaturate: " + targetStates[0].speedMetersPerSecond);
+    System.out.println("============================================");
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    setModuleStates(targetStates);
+    
   }
 
   private SwerveModuleState[] getModuleStates() {
@@ -248,20 +245,6 @@ public class DriveSubsystem extends SubsystemBase {
     };
   }
 
-
-  public void setStates(SwerveModuleState[] targetStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(targetStates, DriveConstants.kMaxSpeedMetersPerSecond);
-
-    System.out.println("In setStates");
-    System.out.println("RealDesiredChassisSpeed: " + DriveConstants.kDriveKinematics.toChassisSpeeds(targetStates));
-    System.out.println("DesiredModuleStates: " + targetStates);
-    System.out.println("DesiredModuleStates1: " + targetStates[0].speedMetersPerSecond + " " + targetStates[0].angle.getDegrees());
-    m_frontLeft.setDesiredState(targetStates[0]);
-    m_frontRight.setDesiredState(targetStates[1]);
-    m_rearLeft.setDesiredState(targetStates[2]);
-    m_rearRight.setDesiredState(targetStates[3]);
-  }
-
   /**
    * Sets the wheels into an X formation to prevent movement.
    */
@@ -278,15 +261,16 @@ public class DriveSubsystem extends SubsystemBase {
    * @param desiredStates The desired SwerveModule states.
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    //SwerveDriveKinematics.desaturateWheelSpeeds(
-    //    desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
     SwerveDriveKinematics.desaturateWheelSpeeds(
-          desiredStates, Constants.MAX_AUTO_SPEED);
+        desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+
     
+    System.out.println("===================================");
     System.out.println("In setModulesStates");
-    System.out.println("RealDesiredChassisSpeed: " + DriveConstants.kDriveKinematics.toChassisSpeeds(desiredStates));
+    System.out.println("RealDesiredChassisSpeed: " + DriveConstants.kMaxSpeedMetersPerSecond);
     System.out.println("DesiredModuleStates0: " + desiredStates[0].speedMetersPerSecond + " " + desiredStates[0].angle.getDegrees());
-        
+    System.out.println("===================================");    
+
     m_frontLeft.setDesiredState(desiredStates[0]);
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);

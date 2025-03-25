@@ -38,8 +38,10 @@ public final class Constants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     
-    public static final double kMaxSpeedMetersPerSecond = .10;
-    public static final double kMaxAngularSpeed = .04 * Math.PI; // radians per second
+    //public static final double kMaxSpeedMetersPerSecond = .10;
+    public static final double kMaxSpeedMetersPerSecond = 1.0;
+    //public static final double kMaxAngularSpeed = .04 * Math.PI; // radians per second
+    public static final double kMaxAngularSpeed = 2 * Math.PI;
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(26 );
@@ -87,33 +89,20 @@ public final class Constants {
     public static final int kDrivingMotorPinionTeeth = 13;
 
     // Calculations required for driving motor conversion factors and feed forward
-    public static final double kDrivingMotorFreeSpeedRps = .01;
+    //public static final double kDrivingMotorFreeSpeedRps = .01;
+    public static final double kDrivingMotorFreeSpeedRps = 5676;
     public static final double kWheelDiameterMeters = 0.0762;
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
     // teeth on the bevel pinion
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
-    public static final double kDriveWheelFreeSpeedRps = .01;
+    //public static final double kDriveWheelFreeSpeedRps = .01;
+    public static final double kDriveWheelFreeSpeedMps = (kDrivingMotorFreeSpeedRps / 60 * kWheelCircumferenceMeters) / kDrivingMotorReduction;
   }
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final double kDriveDeadband = 0.05;
-  }
-
-  public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = .004;
-    public static final double kMaxAccelerationMetersPerSecondSquared = .003;
-    public static final double kMaxAngularSpeedRadiansPerSecond = .004;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
-
-    // Constraint for the motion profiled robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
   public static final class NeoMotorConstants {
@@ -126,4 +115,14 @@ public final class Constants {
   public static final int ELEVATOR_MOTOR_CAN_ID = 59;
   public static final int ARMATURE_MOTOR_CAN_ID = 60;
   public static final int DRAWBRIDGE_MOTOR_CAN_ID = 62;
+
+  public static final double ELEVATOR_MAX = -200;
+  public static final double ELEVATOR_TOP_ALGAE = -50;
+  public static final double ELEVATOR_PROCESSOR = -25;
+  public static final double ELEVATOR_HOME = 0;
+
+  public static final double ARMATURE_FLOOR = 18.5;
+  public static final double ARMATURE_FLOOR_2 = 17;
+  public static final double ARMATURE_REEF = 12;
+  public static final double ARMATURE_HOME = 0;
 }

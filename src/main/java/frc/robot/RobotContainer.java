@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.AutoConstants;
+//import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Armature;
@@ -87,11 +87,19 @@ public class RobotContainer {
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            () -> m_robotDrive.drive(
+            /*() -> m_robotDrive.drive(
 
                 -MathUtil.applyDeadband(m_driverController.getLeftY()*.1, OIConstants.kDriveDeadband),
                 MathUtil.applyDeadband(m_driverController.getLeftX()*.1, OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX()*.1, OIConstants.kDriveDeadband),
+                true),
+            m_robotDrive));
+            */
+            () -> m_robotDrive.drive(
+
+                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true),
             m_robotDrive));
 
@@ -99,18 +107,18 @@ public class RobotContainer {
         new RunCommand(
             () -> {
                 if (j.getRawButtonPressed(2)) {
-                    m_Elevator.gotoPosition(-200);
+                    m_Elevator.gotoPosition(Constants.ELEVATOR_MAX);
                   //System.out.println("GoUpAndDown button pressed");
                 } else if (j.getRawButtonReleased(7)) {
-                    m_Elevator.gotoPosition(-150);
+                    m_Elevator.gotoPosition(Constants.ELEVATOR_TOP_ALGAE);
                   //System.out.println("GoUpAndDown button pressed");
                 } else if (j.getRawButtonPressed(11)) {
-                    m_Elevator.gotoPosition(0);
+                    m_Elevator.gotoPosition(Constants.ELEVATOR_HOME);
                     //System.out.println("GoUpAndDown button pressed");
                 //} else if (j.getRawButtonPressed(12)) {
                     //Elevator.resetEncoderPosition();
                 } else if (j.getRawButtonPressed(9)) {
-                    m_Elevator.gotoPosition(-25);
+                    m_Elevator.gotoPosition(Constants.ELEVATOR_PROCESSOR);
                 }
             }, m_Elevator)
     );
@@ -119,14 +127,14 @@ public class RobotContainer {
       new RunCommand(
         () -> {
           if (j.getRawButtonPressed(5)) {
-            m_Armature.gotoPosition(12);
+            m_Armature.gotoPosition(Constants.ARMATURE_REEF);
           } else if (j.getRawButtonReleased(4)) {
-            m_Armature.gotoPosition(18.5);
+            m_Armature.gotoPosition(Constants.ARMATURE_FLOOR);
           } else if (j.getRawButtonPressed(6)) {
-            m_Armature.gotoPosition(0);
+            m_Armature.gotoPosition(Constants.ARMATURE_HOME);
           } else if (j.getRawButtonPressed(3)) {
             
-            m_Armature.gotoPosition(17);
+            m_Armature.gotoPosition(Constants.ARMATURE_FLOOR_2);
           //} else if (j.getRawButtonPressed(12)) {
             //m_Armature.resetEncoderPosition();
           }
@@ -185,7 +193,7 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
         .whileFalse(new RunCommand(
           () -> m_Intake.stop(), 
-          m_Intake));
+          m_Intake));     
   }
 
 
