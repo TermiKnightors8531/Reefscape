@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -39,8 +40,8 @@ public class Drawbridge extends SubsystemBase {
         // Max Velocity for Neo Motor is 5676 RPM
         motorConfig.closedLoop.maxMotion
             .maxVelocity(5000)
-            .maxAcceleration(5000)
-            .allowedClosedLoopError(2.0);
+            .maxAcceleration(2500)
+            .allowedClosedLoopError(1.5);
 
         motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     }
@@ -50,21 +51,25 @@ public class Drawbridge extends SubsystemBase {
 
     public void gotoPosition() {
         if (motorRelEncoder.getPosition() >5) {
-            motorClosedLoopEncoder.setReference(0, ControlType.kMAXMotionPositionControl);
+            motorClosedLoopEncoder.setReference(Constants.DRAWBRIDGE_HOME, ControlType.kMAXMotionPositionControl);
         } else {
-            motorClosedLoopEncoder.setReference(28, ControlType.kMAXMotionPositionControl);
+            motorClosedLoopEncoder.setReference(Constants.DRAWBRIDGE_OPEN, ControlType.kMAXMotionPositionControl);
         }
 
     }
 
-    public void goUp() {
-        motor.set(.4);
+    public void manualOperation(double speed) {
+        motor.set(speed);
     }
-    public void goDown() {
-        motor.set(-0.4);
+
+    public Command commandDrawbridgeManual(double speed) {
+        return this.runOnce(() -> manualOperation(speed));
     }
-    public void stopBridge() {
-        motor.set(0);
+    public Command commandDrawbridge() {
+        return this.runOnce(() -> gotoPosition());
+    }
+    public Command commandResetEncoder() {
+        return this.runOnce(() -> resetEncoderPosition());
     }
 
     public void showData() {

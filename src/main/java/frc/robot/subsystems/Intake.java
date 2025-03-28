@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 
 
 public class Intake extends SubsystemBase {
@@ -55,9 +56,27 @@ public class Intake extends SubsystemBase {
         motor.set(-0.6);
         System.out.println("INTAKE GO BACKWARD button pressed");
     }
+    public void rotate(double percent) {
+        motor.set(percent);
+    }
+
     public void stop() {
         motor.set(0);
         System.out.println("INTAKE STOP button pressed");
+    }
+
+    public Command commandRotate(double percent) {
+        return this.runOnce(() -> rotate(percent));
+    }
+    
+    public Command commandGoForward() {
+        return this.runOnce(() -> goForward());
+    }
+    public Command commandGoBackward() {
+        return this.runOnce(() -> goBackward());
+    }
+    public Command commandStop() {
+        return this.runOnce(() -> stop());
     }
 
     public void showData() {

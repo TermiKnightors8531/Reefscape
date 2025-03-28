@@ -1,4 +1,95 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "SPARK MAX [51]": {
+        "name": "FL Turn [51]"
+      },
+      "SPARK MAX [51] ABSOLUTE ENCODER": {
+        "header": {
+          "open": true
+        },
+        "name": "FL Turn [51] ABSOLUTE ENCODER"
+      },
+      "SPARK MAX [52]": {
+        "name": "FR Turn [52]"
+      },
+      "SPARK MAX [52] ABSOLUTE ENCODER": {
+        "name": "FR Turn [55] ABSOLUTE ENCODER"
+      },
+      "SPARK MAX [53]": {
+        "name": "RL Turn [53]"
+      },
+      "SPARK MAX [53] ABSOLUTE ENCODER": {
+        "name": "RL Turn [53] ABSOLUTE ENCODER"
+      },
+      "SPARK MAX [54]": {
+        "name": "RR Turn [54]"
+      },
+      "SPARK MAX [54] ABSOLUTE ENCODER": {
+        "name": "RR Turn [54] ABSOLUTE ENCODER"
+      },
+      "SPARK MAX [55]": {
+        "name": "FR Drive [55]"
+      },
+      "SPARK MAX [55] RELATIVE ENCODER": {
+        "name": "FR Drive [55] RELATIVE ENCODER"
+      },
+      "SPARK MAX [56]": {
+        "name": "FL Drive [56]"
+      },
+      "SPARK MAX [56] RELATIVE ENCODER": {
+        "header": {
+          "open": true
+        },
+        "name": "FL Drive [56] RELATIVE ENCODER"
+      },
+      "SPARK MAX [57]": {
+        "name": "RR Drive [57]"
+      },
+      "SPARK MAX [57] RELATIVE ENCODER": {
+        "name": "RR Drive [57] RELATIVE ENCODER"
+      },
+      "SPARK MAX [58]": {
+        "name": "RL Drive [58]"
+      },
+      "SPARK MAX [58] RELATIVE ENCODER": {
+        "name": "RL Drive[58] RELATIVE ENCODER"
+      },
+      "SPARK MAX [59]": {
+        "header": {
+          "open": true
+        },
+        "name": "Elevator [59]"
+      },
+      "SPARK MAX [60]": {
+        "header": {
+          "open": true
+        },
+        "name": "Armature [60]"
+      },
+      "SPARK MAX [60] RELATIVE ENCODER": {
+        "name": "Armature [60] RELATIVE ENCODER"
+      },
+      "SPARK MAX [61]": {
+        "header": {
+          "open": true
+        },
+        "name": "Intake [61]"
+      },
+      "SPARK MAX [61] RELATIVE ENCODER": {
+        "name": "Intake [61] RELATIVE ENCODER"
+      },
+      "SPARK MAX [62]": {
+        "header": {
+          "open": true
+        },
+        "name": "Drawbridge [62]"
+      },
+      "SPARK MAX [62] RELATIVE ENCODER": {
+        "name": "Drawbridge [62] RELATIVE ENCODER"
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",

@@ -39,7 +39,7 @@ public final class Constants {
     // the robot, rather the allowed maximum speeds
     
     //public static final double kMaxSpeedMetersPerSecond = .10;
-    public static final double kMaxSpeedMetersPerSecond = 1.0;
+    public static final double kMaxSpeedMetersPerSecond = 2.0;
     //public static final double kMaxAngularSpeed = .04 * Math.PI; // radians per second
     public static final double kMaxAngularSpeed = 2 * Math.PI;
 
@@ -117,6 +117,7 @@ public final class Constants {
   public static final int DRAWBRIDGE_MOTOR_CAN_ID = 62;
 
   public static final double ELEVATOR_MAX = -200;
+  public static final double ELEVATOR_L1_DROP = -135;
   public static final double ELEVATOR_TOP_ALGAE = -50;
   public static final double ELEVATOR_PROCESSOR = -25;
   public static final double ELEVATOR_HOME = 0;
@@ -125,4 +126,14 @@ public final class Constants {
   public static final double ARMATURE_FLOOR_2 = 17;
   public static final double ARMATURE_REEF = 12;
   public static final double ARMATURE_HOME = 0;
+
+  public static final double INTAKE_FWD_SPEED = 0.6;
+  public static final double INTAKE_REV_SPEED = -0.6;
+  public static final double INTAKE_STOP_SPEED = 0.0;
+
+  public static final double DRAWBRIDGE_HOME = 0.0;
+  public static final double DRAWBRIDGE_OPEN = 30.0;
+  public static final double DRAWBRIDGE_MANUAL_STOP = 0.0;
+  public static final double DRAWBRIDGE_MANUAL_DOWN = -0.4;
+  public static final double DRAWBRIDGE_MANUAL_UP = 0.4;
 }

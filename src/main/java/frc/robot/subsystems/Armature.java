@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
     
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
 import com.revrobotics.RelativeEncoder;
@@ -53,6 +54,10 @@ public class Armature extends SubsystemBase {
 
     public void resetEncoderPosition() {
         motorRelEncoder.setPosition(0);
+    }
+
+    public Command commandArmature(double position) {
+        return this.runOnce(() -> gotoPosition(position));
     }
 
     public void showData() {

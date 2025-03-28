@@ -12,6 +12,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
@@ -40,7 +41,7 @@ public class Elevator extends SubsystemBase {
         // Max Velocity for Neo Motor is 5676 RPM
         motorConfig.closedLoop.maxMotion
             .maxVelocity(5676)
-            .maxAcceleration(2500)
+            .maxAcceleration(5000)
             .allowedClosedLoopError(0.5);
 
         motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
@@ -66,6 +67,18 @@ public class Elevator extends SubsystemBase {
         SmartDashboard.putNumber("Elevator Position", motorRelEncoder.getPosition());
         SmartDashboard.putNumber("Elevator Velocity", motorRelEncoder.getVelocity()); 
         SmartDashboard.putBoolean("Bottom Limit Switch", bottomlimitSwitch.get());
+    }
+
+    public Command commandMoveElevator(double position) {
+        return this.runOnce(() -> gotoPosition(position));
+    }
+
+    public Command autoMoveToProcessor() {
+        return this.runOnce(() -> gotoPosition(Constants.ELEVATOR_PROCESSOR));
+    }
+
+    public Command autoMoveToTopAlgae() {
+        return this.runOnce(() -> gotoPosition(Constants.ELEVATOR_TOP_ALGAE));
     }
 
 }

@@ -18,9 +18,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants;
 import frc.robot.subsystems.Armature;
 import frc.robot.subsystems.Drawbridge;
 import frc.robot.subsystems.DriveSubsystem;
@@ -30,9 +30,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import static edu.wpi.first.units.Units.Newton;
+
 import java.util.List;
 
-import com.fasterxml.jackson.databind.util.Named;
+//import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -48,22 +52,33 @@ import com.pathplanner.lib.auto.NamedCommands;
 public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  static Elevator m_Elevator = new Elevator();
-  Armature m_Armature = new Armature();
-  Drawbridge m_Drawbridge = new Drawbridge();
-  Intake m_Intake = new Intake();
+  private static Elevator m_Elevator = new Elevator();
+  private static Armature m_Armature = new Armature();
+  private static Drawbridge m_Drawbridge = new Drawbridge();
+  private static Intake m_Intake = new Intake();
   private final SendableChooser<Command> autoChooser;
 
 
-
-
-
-
-
   // The driver's controller
-  //XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   XboxController m_driverController = new XboxController(0);
   Joystick j = new Joystick(1);
+
+  Trigger xLB = new JoystickButton(m_driverController, Button.kLeftBumper.value);
+  Trigger xRB = new JoystickButton(m_driverController, Button.kRightBumper.value);
+  Trigger j1 = new JoystickButton(j, 1);
+  Trigger j2 = new JoystickButton(j, 2);
+  Trigger j3 = new JoystickButton(j, 3);
+  Trigger j4 = new JoystickButton(j, 4);
+  Trigger j5 = new JoystickButton(j, 5);
+  Trigger j6 = new JoystickButton(j, 6);
+  Trigger j7 = new JoystickButton(j, 7);
+  Trigger j8 = new JoystickButton(j, 8);
+  Trigger j9 = new JoystickButton(j, 9);
+  Trigger j10 = new JoystickButton(j, 10);
+  Trigger j11 = new JoystickButton(j, 11);
+  Trigger j12 = new JoystickButton(j, 12);
+
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -72,29 +87,20 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    
-    //path planner thingy?
-    NamedCommands.registerCommand("Elevator Shortest", elevatorUpShortest()); 
-    NamedCommands.registerCommand("Elevator Normal", elevatorNormal());
-    NamedCommands.registerCommand("Drawbridge Open", drawbridgeOpen());
-    NamedCommands.registerCommand("Drawbridge Close", drawbridgeClose());
-    //???
-
-
+    NamedCommands.registerCommand("autoElevatorReefDropoff", 
+        m_Elevator.commandMoveElevator(Constants.ELEVATOR_L1_DROP));
+    NamedCommands.registerCommand("autoElevatorToProcessor", 
+        m_Elevator.commandMoveElevator(Constants.ELEVATOR_PROCESSOR));
+    NamedCommands.registerCommand("autoDrawbridge", 
+        m_Drawbridge.commandDrawbridge());
+    NamedCommands.registerCommand("autoArmaturePick",
+        m_Armature.commandArmature(Constants.ARMATURE_REEF));
 
     // Configure default commands
     m_robotDrive.setDefaultCommand(
         // The left stick controls translation of the robot.
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
-            /*() -> m_robotDrive.drive(
-
-                -MathUtil.applyDeadband(m_driverController.getLeftY()*.1, OIConstants.kDriveDeadband),
-                MathUtil.applyDeadband(m_driverController.getLeftX()*.1, OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getRightX()*.1, OIConstants.kDriveDeadband),
-                true),
-            m_robotDrive));
-            */
             () -> m_robotDrive.drive(
 
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
@@ -102,63 +108,6 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true),
             m_robotDrive));
-
-    m_Elevator.setDefaultCommand(
-        new RunCommand(
-            () -> {
-                if (j.getRawButtonPressed(2)) {
-                    m_Elevator.gotoPosition(Constants.ELEVATOR_MAX);
-                  //System.out.println("GoUpAndDown button pressed");
-                } else if (j.getRawButtonReleased(7)) {
-                    m_Elevator.gotoPosition(Constants.ELEVATOR_TOP_ALGAE);
-                  //System.out.println("GoUpAndDown button pressed");
-                } else if (j.getRawButtonPressed(11)) {
-                    m_Elevator.gotoPosition(Constants.ELEVATOR_HOME);
-                    //System.out.println("GoUpAndDown button pressed");
-                //} else if (j.getRawButtonPressed(12)) {
-                    //Elevator.resetEncoderPosition();
-                } else if (j.getRawButtonPressed(9)) {
-                    m_Elevator.gotoPosition(Constants.ELEVATOR_PROCESSOR);
-                }
-            }, m_Elevator)
-    );
-    
-    m_Armature.setDefaultCommand(
-      new RunCommand(
-        () -> {
-          if (j.getRawButtonPressed(5)) {
-            m_Armature.gotoPosition(Constants.ARMATURE_REEF);
-          } else if (j.getRawButtonReleased(4)) {
-            m_Armature.gotoPosition(Constants.ARMATURE_FLOOR);
-          } else if (j.getRawButtonPressed(6)) {
-            m_Armature.gotoPosition(Constants.ARMATURE_HOME);
-          } else if (j.getRawButtonPressed(3)) {
-            
-            m_Armature.gotoPosition(Constants.ARMATURE_FLOOR_2);
-          //} else if (j.getRawButtonPressed(12)) {
-            //m_Armature.resetEncoderPosition();
-          }
-        }, m_Armature)
-    );
-
-    m_Drawbridge.setDefaultCommand(
-      new RunCommand(
-        () -> {
-          if (j.getRawButtonPressed(1)) {
-            m_Drawbridge.gotoPosition();
-          } else if (j.getRawButtonPressed(12)) {
-            m_Drawbridge.resetEncoderPosition();
-          } else if(j.getRawButtonPressed(8)) {
-            m_Drawbridge.goUp();
-          } else if(j.getRawButtonReleased(8)){
-            m_Drawbridge.stopBridge();
-          } else if(j.getRawButtonPressed(10)) {
-            m_Drawbridge.goDown();
-          } else if(j.getRawButtonReleased(10)){
-            m_Drawbridge.stopBridge();
-          }
-        }, m_Drawbridge)
-    );
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -174,57 +123,36 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    //new JoystickButton(m_driverController, Button.kR1.value)
-    //    .whileTrue(new RunCommand(
-    //        () -> m_robotDrive.setX(),
-    //        m_robotDrive));
-    new JoystickButton(m_driverController, Button.kRightBumper.value)
-        .whileTrue(new RunCommand(
-          () -> m_Intake.goForward(), 
-          m_Intake));
-    new JoystickButton(m_driverController, Button.kLeftBumper.value)
-        .whileTrue(new RunCommand(
-          () -> m_Intake.goBackward(),
-          m_Intake));
-    new JoystickButton(m_driverController, Button.kRightBumper.value)
-        .whileFalse(new RunCommand(
-          () -> m_Intake.stop(), 
-          m_Intake));
-    new JoystickButton(m_driverController, Button.kLeftBumper.value)
-        .whileFalse(new RunCommand(
-          () -> m_Intake.stop(), 
-          m_Intake));     
+
+    xLB.onTrue(m_Intake
+      .commandRotate(Constants.INTAKE_REV_SPEED))
+      .onFalse(m_Intake.commandRotate(Constants.INTAKE_STOP_SPEED));
+    xRB.onTrue(m_Intake
+      .commandRotate(Constants.INTAKE_FWD_SPEED))
+      .onFalse(m_Intake.commandRotate(Constants.INTAKE_STOP_SPEED));
+    j1.onTrue(m_Drawbridge.commandDrawbridge());
+    j2.onTrue(m_Elevator.commandMoveElevator(Constants.ELEVATOR_MAX));
+    j3.onTrue(m_Armature.commandArmature(Constants.ARMATURE_FLOOR_2));
+    j4.onTrue(m_Armature.commandArmature(Constants.ARMATURE_FLOOR));
+    j5.onTrue(m_Armature.commandArmature(Constants.ARMATURE_REEF));
+    j6.onTrue(m_Armature.commandArmature(Constants.ARMATURE_HOME));
+    j7.onTrue(m_Elevator.commandMoveElevator(Constants.ELEVATOR_TOP_ALGAE));
+    j8.whileTrue(m_Drawbridge
+      .commandDrawbridgeManual(Constants.DRAWBRIDGE_MANUAL_UP))
+      .whileFalse(m_Drawbridge.commandDrawbridgeManual(Constants.DRAWBRIDGE_MANUAL_STOP));
+    j9.onTrue(m_Elevator.commandMoveElevator(Constants.ELEVATOR_PROCESSOR));
+    j10.whileTrue(m_Drawbridge
+      .commandDrawbridgeManual(Constants.DRAWBRIDGE_MANUAL_DOWN))
+      .whileFalse(m_Drawbridge.commandDrawbridgeManual(Constants.DRAWBRIDGE_MANUAL_STOP));
+    j11.onTrue(m_Elevator.commandMoveElevator(Constants.ELEVATOR_HOME));
+    j12.onTrue(m_Drawbridge.commandResetEncoder());      
   }
 
 
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("CenterAuto");
+    //return new PathPlannerAuto("CenterAuto");
+    return autoChooser.getSelected();
   }
-
-  //new things that probably won't work - gabe
-  public Command elevatorUpShortest() {
-    return new RunCommand(
-      () -> m_Elevator.gotoPosition(-25),
-      m_Elevator);
-  }
-  public Command elevatorNormal() {
-    return new RunCommand(
-      () -> m_Elevator.gotoPosition(0),
-      m_Elevator);
-  }
-  public Command drawbridgeOpen() {
-    return new RunCommand(
-      () -> m_Drawbridge.gotoPosition(),
-      m_Drawbridge);
-  }
-  public Command drawbridgeClose() {
-    return new RunCommand(
-      () -> m_Drawbridge.gotoPosition(),
-      m_Drawbridge);
-  }
-  //end of things :)
-  
-
 
 
   public void showData() {
