@@ -62,6 +62,10 @@ public class Armature extends SubsystemBase {
         return this.runOnce(() -> gotoPosition(position));
     }
 
+    public Command commandArmatureReset() {
+        return this.runOnce(() -> resetEncoderPosition());
+    }
+
     public void showData() {
         SmartDashboard.putNumber("Armature Actual Position", motorRelEncoder.getPosition());
         SmartDashboard.putNumber("Armature Actual Velocity", motorRelEncoder.getVelocity()); 

@@ -38,8 +38,8 @@ public class Climber extends SubsystemBase {
             .positionConversionFactor(1.0);
 
         climbConfig.closedLoop
-            //.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
+            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+            //.feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
             .p(1)
             .i(0)
             .d(0.1)
@@ -89,6 +89,8 @@ public class Climber extends SubsystemBase {
     public void showData() {
         SmartDashboard.putNumber("Climber Actual Position", motorRelEncoder.getPosition());
         SmartDashboard.putNumber("Climber Actual Velocity", motorRelEncoder.getVelocity()); 
+        SmartDashboard.putNumber("Clibmer absolute Position", motorAbsEncoder.getPosition());
+        SmartDashboard.putNumber("Climber abs Velocity", motorAbsEncoder.getVelocity());
     }
     
 }

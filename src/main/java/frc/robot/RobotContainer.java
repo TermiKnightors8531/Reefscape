@@ -162,8 +162,9 @@ public class RobotContainer {
       .commandDrawbridgeManual(Constants.DRAWBRIDGE_MANUAL_DOWN))
       .whileFalse(m_Drawbridge.commandDrawbridgeManual(Constants.DRAWBRIDGE_MANUAL_STOP));
     j11.onTrue(m_Elevator.commandMoveElevator(Constants.ELEVATOR_HOME));
+    j12.onTrue(m_Armature.commandArmatureReset());
     //j12.onTrue(m_Drawbridge.commandResetEncoder());
-    j12.onTrue(m_Climber.commandResetEncoder());      
+    //j12.onTrue(m_Climber.commandResetEncoder());      
   }
 
 
