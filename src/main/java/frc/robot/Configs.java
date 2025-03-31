@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import frc.robot.Constants.ModuleConstants;
@@ -10,6 +11,8 @@ public final class Configs {
     public static final class MAXSwerveModule {
         public static final SparkMaxConfig drivingConfig = new SparkMaxConfig();
         public static final SparkMaxConfig turningConfig = new SparkMaxConfig();
+        public static final SparkMaxConfig motorConfig = new SparkMaxConfig();
+        public static final SparkBaseConfig ClimberConfig = new SparkMaxConfig();
 
         static {
             // Use module constants to calculate conversion factors and feed forward gain.
@@ -52,6 +55,34 @@ public final class Configs {
                     // longer route.
                     .positionWrappingEnabled(true)
                     .positionWrappingInputRange(0, turningFactor);
+
+                
+                // The motor is configured with the same turning factor as the turning motor.
+                ClimberConfig
+                    .idleMode(IdleMode.kBrake)
+                    .smartCurrentLimit(20);
+                ClimberConfig.absoluteEncoder
+                    // Invert the climber encoder, since the output shaft rotates in the opposite
+                    // direction of the climber motor.
+                    .inverted(false);
+                    //.positionConversionFactor(turningFactor) // radians
+                    //.velocityConversionFactor(turningFactor / 60.0); // radians per second
+                ClimberConfig.closedLoop
+                    .feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder)
+                    // These are example gains you may need to them for your own robot!
+                    .pid(1, 0, 0)
+                    .outputRange(-1, 1)
+                    // Enable PID wrap around for the climber. This will allow the PID
+                    // controller to go through 0 to get to the setpoint i.e. going from 350 degrees
+                    // to 10 degrees will go through 0 rather than the other direction which is a
+                    // longer route.
+                    .positionWrappingEnabled(false);
+                    //.positionWrappingInputRange(0, turningFactor);
+                ClimberConfig.closedLoop.maxMotion
+                    .maxVelocity(2000)
+                    .maxAcceleration(2000)
+                    .allowedClosedLoopError(0.1);
+                
         }
     }
 }

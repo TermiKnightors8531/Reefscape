@@ -26,11 +26,13 @@ import frc.robot.subsystems.Drawbridge;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 
 import static edu.wpi.first.units.Units.Newton;
 
@@ -40,6 +42,11 @@ import java.util.List;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.NamedCommands;
+
+//import com.qualcomm.hardware.limelightvision.LLResult;
+//import com.qualcomm.hardware.limelightvision.LLResultTypes;
+//import com.qualcomm.hardware.limelightvision.LLStatus;
+//import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 @SuppressWarnings("unused")
 
@@ -56,7 +63,10 @@ public class RobotContainer {
   private static Armature m_Armature = new Armature();
   private static Drawbridge m_Drawbridge = new Drawbridge();
   private static Intake m_Intake = new Intake();
+  private static Climber m_Climber = new Climber();
   private final SendableChooser<Command> autoChooser;
+  //private Limelight3A limelight3A = new Limelight3A("limelight"); // Create a Limelight3A instance with the camera name
+  //private final LimelightHelpers limelight = new LimelightHelpers();
 
 
   // The driver's controller
@@ -65,6 +75,9 @@ public class RobotContainer {
 
   Trigger xLB = new JoystickButton(m_driverController, Button.kLeftBumper.value);
   Trigger xRB = new JoystickButton(m_driverController, Button.kRightBumper.value);
+  Trigger xX = new JoystickButton(m_driverController, Button.kX.value);
+  Trigger xY = new JoystickButton(m_driverController, Button.kY.value);
+  Trigger xB = new JoystickButton(m_driverController, Button.kB.value);
   Trigger j1 = new JoystickButton(j, 1);
   Trigger j2 = new JoystickButton(j, 2);
   Trigger j3 = new JoystickButton(j, 3);
@@ -111,6 +124,7 @@ public class RobotContainer {
 
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+    //LimelightHelpers.setCamera("limelight"); // Set the camera name for LimelightHelpers
   }
 
   /**
@@ -130,6 +144,9 @@ public class RobotContainer {
     xRB.onTrue(m_Intake
       .commandRotate(Constants.INTAKE_FWD_SPEED))
       .onFalse(m_Intake.commandRotate(Constants.INTAKE_STOP_SPEED));
+    xX.onTrue(m_Climber.commandClimber(Constants.CLIMBER_POSITION_HANG));
+    xY.onTrue(m_Climber.commandClimber(Constants.CLIMBER_POSITION_HOME));
+    xB.onTrue(m_Climber.commandClimber(Constants.CLIMBER_POSITION_GRAB));
     j1.onTrue(m_Drawbridge.commandDrawbridge());
     j2.onTrue(m_Elevator.commandMoveElevator(Constants.ELEVATOR_MAX));
     j3.onTrue(m_Armature.commandArmature(Constants.ARMATURE_FLOOR_2));
@@ -145,7 +162,8 @@ public class RobotContainer {
       .commandDrawbridgeManual(Constants.DRAWBRIDGE_MANUAL_DOWN))
       .whileFalse(m_Drawbridge.commandDrawbridgeManual(Constants.DRAWBRIDGE_MANUAL_STOP));
     j11.onTrue(m_Elevator.commandMoveElevator(Constants.ELEVATOR_HOME));
-    j12.onTrue(m_Drawbridge.commandResetEncoder());      
+    //j12.onTrue(m_Drawbridge.commandResetEncoder());
+    j12.onTrue(m_Climber.commandResetEncoder());      
   }
 
 
@@ -160,6 +178,7 @@ public class RobotContainer {
     m_Armature.showData(); 
     m_Drawbridge.showData();
     m_Intake.showData();
+    m_Climber.showData();
   }
 
   public void checkBottomLimitSwitch() {

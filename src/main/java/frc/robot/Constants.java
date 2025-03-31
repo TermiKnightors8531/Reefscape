@@ -115,6 +115,7 @@ public final class Constants {
   public static final int ELEVATOR_MOTOR_CAN_ID = 59;
   public static final int ARMATURE_MOTOR_CAN_ID = 60;
   public static final int DRAWBRIDGE_MOTOR_CAN_ID = 62;
+  public static final int CLIMBER_MOTOR_CAN_ID = 11;
 
   public static final double ELEVATOR_MAX = -200;
   public static final double ELEVATOR_L1_DROP = -135;
@@ -122,9 +123,12 @@ public final class Constants {
   public static final double ELEVATOR_PROCESSOR = -25;
   public static final double ELEVATOR_HOME = 0;
 
-  public static final double ARMATURE_FLOOR = 18.5;
-  public static final double ARMATURE_FLOOR_2 = 17;
-  public static final double ARMATURE_REEF = 12;
+  //public static final double ARMATURE_FLOOR = -Math.PI*5/6;//18.5;
+  //public static final double ARMATURE_FLOOR_2 = -Math.PI*3/4;//17;
+  //public static final double ARMATURE_REEF = -Math.PI*4/6;//12;
+  public static final double ARMATURE_FLOOR = -18.5;
+  public static final double ARMATURE_FLOOR_2 = -17;
+  public static final double ARMATURE_REEF = -12;
   public static final double ARMATURE_HOME = 0;
 
   public static final double INTAKE_FWD_SPEED = 0.6;
@@ -136,4 +140,9 @@ public final class Constants {
   public static final double DRAWBRIDGE_MANUAL_STOP = 0.0;
   public static final double DRAWBRIDGE_MANUAL_DOWN = -0.4;
   public static final double DRAWBRIDGE_MANUAL_UP = 0.4;
+
+  public static final double CLIMBER_POSITION_HOME = 0.0; // Driving position
+  public static final double CLIMBER_POSITION_HANG = 29.0; // Hang position
+  public static final double CLIMBER_POSITION_GRAB = -40.0; // Grab cage position  
+
 }
